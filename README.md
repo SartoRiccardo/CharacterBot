@@ -1,2 +1,2 @@
 # CharacterBot
-Best bot
+A Discord bot that help roleplaying!
