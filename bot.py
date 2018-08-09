@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import sqlite3
 
-TOKEN = 'NDc1NzA3MDY4MTk2NTg1NDcz.Dkn0Cg.joaqG_doRLcK3h2kSuODyzv7bpo'
+TOKEN = ''
 client = commands.Bot(command_prefix = '>>')
 client.remove_command('help')
 conn = sqlite3.connect('files/characters.db')
