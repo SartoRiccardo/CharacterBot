@@ -1,1 +1,2 @@
 # CharacterBot
+Best bot
