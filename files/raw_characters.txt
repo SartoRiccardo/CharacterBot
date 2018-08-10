@@ -52,7 +52,7 @@ Kalin;Kalin Kessler;Kiryou Kyosuke;M;main;Infernity
 Antinomy;Bruno/Antinomy;Bruno/Antinomy;M;villain;T.G.
 Aporia;Aporia;Aporia;M;villain;Meklord
 Z-one;Z-ONE;Z-ONE;M;villain;Timelord
-Rex goodwin;Rex Goodwin;Rex Goodwin;M;villain;Earthbound Immortal
+Goodwin;Rex Goodwin;Rex Goodwin;M;villain;Earthbound Immortal
 Carly Carmine;Carly Carmine;Carly Nagisa;F;side;Fortune Ladies
 Team Raganrok;Team Ragnarok;Team Ragnarok;M;side;Nordics
 Team Unicorn;Team Unicorn;Team Unicorn;M;side;Unicorn
