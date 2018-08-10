@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import sqlite3
 
-TOKEN = 'NDc1NzA3MDY4MTk2NTg1NDcz.Dkn0Cg.joaqG_doRLcK3h2kSuODyzv7bpo'
+TOKEN = get_token()
 client = commands.Bot(command_prefix = '>>')
 client.remove_command('help')
 conn = sqlite3.connect('files/characters.db')
@@ -35,6 +35,10 @@ async def on_ready():
     print("{}".format(client.user.name))
     print("------------------------")
 
+def get_token():
+    config = open('config.txt', 'r')
+    token = config.read().stripe()
+    return token
 
 def get_embed(title, message, color):
     embed = discord.Embed(
