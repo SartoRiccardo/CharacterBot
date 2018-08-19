@@ -1,40 +1,37 @@
-import os
 import json
 import sqlite3
 from contextlib import closing
+from modules.misc_utils import *
 
 
-def get_dict_keys(dict):
-    ret = list(dict.keys())
+def get_tables(ctx):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+
+    with closing(conn.cursor()) as c:
+        c.execute('SELECT name FROM sqlite_master WHERE type="table"')
+        raw = c.fetchall()
+    conn.close()
+
+    ret = [t[0][1:] for t in raw]
     return ret
 
 
-def get_CharacterBot_path():
-    ret = os.path.dirname(os.path.abspath(__file__))
-    ret = str.join('/', ret.split('/')[:-1])
-    return ret
-
-
-def get_tables():
-    with open(get_CharacterBot_path() + '/files/tables.json') as jsonFile:
-        ret = json.load(jsonFile)['tables']
+def get_columns(ctx):
+    server = ctx.message.server.id
+    with open(get_CharacterBot_path() + '/files/servers.json', 'r') as jsonFile:
+        ret = json.load(jsonFile)[str(server)]
 
     return ret
 
 
-def get_attributes():
-    with open(get_CharacterBot_path() + '/files/tables.json') as jsonFile:
-        ret = json.load(jsonFile)['columns']
-
-    return ret
-
-
-def add_table(table):
+def add_table(ctx, table):
     with open(get_CharacterBot_path() + '/files/tables.json', 'r') as jsonFile:
         data = json.load(jsonFile)
 
     data['tables'].append(table)
-    conn = sqlite3.connect(get_CharacterBot_path() + '/files/characters.db')
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         command = 'CREATE TABLE IF NOT EXISTS t{} ('.format(table)
@@ -50,12 +47,13 @@ def add_table(table):
         json.dumps(data, jsonFile)
 
 
-def get_character_info(character):
-    conn = sqlite3.connect(get_CharacterBot_path() + '/files/characters.db')
+def get_character_info(ctx, character):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         ret = {}
-        tables = get_tables()
+        tables = get_tables(ctx)
         for t in tables:
             c.execute('SELECT * FROM t{} WHERE LOWER(name)=LOWER("{}")'.format(t, character))
             info = c.fetchall()
@@ -67,12 +65,14 @@ def get_character_info(character):
     return ret
 
 
-def get_user_character(user):
-    conn = sqlite3.connect(get_CharacterBot_path() + '/files/characters.db')
+def get_user_character(ctx):
+    user = ctx.message.author
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         ret = None
-        tables = get_tables()
+        tables = get_tables(ctx)
         for t in tables:
             c.execute('SELECT name FROM t{} WHERE taken_by="{}"'.format(t, user))
             info = c.fetchall()
@@ -84,8 +84,9 @@ def get_user_character(user):
     return ret
 
 
-def fetch(condition):
-    conn = sqlite3.connect(get_CharacterBot_path() + '/files/characters.db')
+def fetch(ctx, condition):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         c.execute(condition.replace('FROM ', 'FROM t'))
@@ -94,15 +95,12 @@ def fetch(condition):
     conn.close()
     return ret
 
-def modify(condition):
-    conn = sqlite3.connect(get_CharacterBot_path() + '/files/characters.db')
+def modify(ctx, condition):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         c.execute(condition.replace('UPDATE ', 'UPDATE t'))
         conn.commit()
 
     conn.close()
-
-
-def in_range(i, list):
-    return i in range(len(list))
