@@ -2,7 +2,7 @@ import json
 import discord
 from discord.ext import commands
 from modules.chat_utils import *
-from char import leave, list, take, status, template, add, delete
+from char import leave, list, take, status, template, add, delete, create
 
 def __init__():
     with open('config.json') as jsonFile:
@@ -63,6 +63,8 @@ async def char(ctx, *args):
             await add.run(client, ctx, args, parameters['add'])
         elif args[0] == 'del':
             await delete.run(client, ctx, args, parameters['delete'])
+        elif args[0] == 'create':
+            await create.run(client, ctx, args, parameters['create'])
         else:
             await status.run(client, ctx, args)
     except IndexError:

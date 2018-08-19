@@ -17,7 +17,7 @@ def get_tables(ctx):
     return ret
 
 
-def get_columns(ctx):
+def get_columns(ctx): # also returns name and taken_by
     server = ctx.message.server.id
     with open(get_CharacterBot_path() + '/files/servers.json', 'r') as jsonFile:
         ret = json.load(jsonFile)[server]

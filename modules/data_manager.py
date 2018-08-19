@@ -5,7 +5,19 @@ from modules.misc_utils import *
 from modules.data_getter import get_columns, get_server_data, get_table_names, get_character_info
 
 def create_table(ctx, name):
-    pass
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+
+    with closing(conn.cursor()) as c:
+        cmd = 'CREATE TABLE t{} (name TEXT, taken_by TEXT'.format(name)
+        for col in get_columns(ctx)[2:]:
+            cmd += ', ' + col + 'TEXT'
+        cmd += ')'
+
+        c.execute(cmd)
+        conn.commit()
+
+    conn.close()
 
 
 def delete_table(ctx, table):
