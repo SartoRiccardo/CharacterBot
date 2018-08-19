@@ -1,4 +1,6 @@
 /files
+/char/__pycache__/
+/modules/sqlite_utils.py
 /.idea
 /data
 /modules/__pycache__

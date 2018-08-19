@@ -1,11 +1,7 @@
 import json
 import sqlite3
 from contextlib import closing
-from modules.data_getter import get_CharacterBot_path, get_columns
-
-def add_character(ctx, table, *args):
-    pass
-
+from modules.data_getter import get_CharacterBot_path, get_columns, get_server_data, get_table_names
 
 def delete_character(ctx, character):
     pass
@@ -19,7 +15,7 @@ def delete_table(ctx, table):
     pass
 
 
-def update_template(ctx, columns):
+def update_template(ctx, columns):  #FIXME REFACTOR
     def reformat_table(t):
         c.execute('DROP TABLE IF EXISTS temp')
         conn.commit()
@@ -59,9 +55,9 @@ def update_template(ctx, columns):
         conn.commit()
 
     id = ctx.message.server.id
-    if id not in get_data():
+    if id not in get_server_data():
         register_server(id)
-    db_dir = get_CharacterBot_path() + '/data/' + str(id) + '.db'
+    db_dir = get_CharacterBot_path() + '/data/' + id + '.db'
     conn = sqlite3.connect(db_dir)
 
     with closing(conn.cursor()) as c:
@@ -79,29 +75,42 @@ def update_template(ctx, columns):
         json.dump(data, jsonFile)
 
 
-def get_table_names(cursor):
-    cursor.execute('SELECT name FROM sqlite_master WHERE type="table"')
-    raw = cursor.fetchall()  # gives list of tuples with one element
-
-    ret = []
-    for raw_name in raw:
-        ret.append(raw_name[0])
-
-    return ret
-
-
 def register_server(id):
-    servers = get_data()
-    print('THESE ARE THE SERVERS:',servers)
-    servers[str(id)] = ["name", "taken_by"]
+    servers = get_server_data()
+    servers[id] = ["name", "taken_by"]
     path = get_CharacterBot_path() + '/files/servers.json'
     with open(path, 'w') as jsonFile:
         json.dump(servers, jsonFile)
 
+def modify(ctx, condition):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
-def get_data():
-    path = get_CharacterBot_path() + '/files/servers.json'
-    with open(path, 'r') as jsonFile:
-        ret = json.load(jsonFile)
+    with closing(conn.cursor()) as c:
+        c.execute(condition.replace('UPDATE ', 'UPDATE t'))
+        conn.commit()
 
-    return ret
+    conn.close()
+
+def insert(ctx, condition):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+
+    with closing(conn.cursor()) as c:
+        print(condition.replace('INSERT INTO ', 'INSERT INTO t'))
+        c.execute(condition.replace('INSERT INTO ', 'INSERT INTO t'))
+        conn.commit()
+
+    conn.close()
+
+def delete_char(ctx, condition):
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+
+    with closing(conn.cursor()) as c:
+        print(condition.replace('DELETE FROM ', 'DELETE FROM t'))
+        c.execute(condition.replace('DELETE FROM ', 'DELETE FROM t'))
+        conn.commit()
+
+    conn.close()
+

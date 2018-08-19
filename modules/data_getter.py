@@ -47,7 +47,7 @@ def add_table(ctx, table):
         json.dumps(data, jsonFile)
 
 
-def get_character_info(ctx, character):
+def get_character_info(ctx, character): # returns a dict contaning {table: (rows)}, empty dict if nothing is found
     server = ctx.message.server.id
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
@@ -95,12 +95,20 @@ def fetch(ctx, condition):
     conn.close()
     return ret
 
-def modify(ctx, condition):
-    server = ctx.message.server.id
-    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+def get_server_data():
+    path = get_CharacterBot_path() + '/files/servers.json'
+    with open(path, 'r') as jsonFile:
+        ret = json.load(jsonFile)
 
-    with closing(conn.cursor()) as c:
-        c.execute(condition.replace('UPDATE ', 'UPDATE t'))
-        conn.commit()
+    return ret
 
-    conn.close()
+
+def get_table_names(cursor):
+    cursor.execute('SELECT name FROM sqlite_master WHERE type="table"')
+    raw = cursor.fetchall()  # gives list of tuples with one element
+
+    ret = []
+    for raw_name in raw:
+        ret.append(raw_name[0])
+
+    return ret

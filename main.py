@@ -2,8 +2,7 @@ import json
 import discord
 from discord.ext import commands
 from modules.chat_utils import *
-from modules.data_initializer import *
-from char import leave, list, take, status, template
+from char import leave, list, take, status, template, add
 
 def __init__():
     with open('config.json') as jsonFile:
@@ -26,7 +25,6 @@ async def on_ready():
 
 BR, TAB = '\n', '\t'
 
-
 async def create_role(author, role_name, role_colour):
     role = await client.create_role(author.server, name=role_name, colour=role_colour)
     return role
@@ -42,6 +40,14 @@ async def char(ctx, *args):
         message += bold(command + 'take (character)') + ' - Assign youself to a character' + BR
         message += bold(command + 'leave') + ' - Stop being your character' + BR
         message += bold(command + '(character)') + ' - Get info about the character' + BR
+
+        if ctx.message.author.server_permissions.administrator:
+            message += BR
+            message += bold(command + 'template (columns)') + ' - Update the template' + BR
+            message += bold(command + 'create (table)') + ' - Create a new table' + BR
+            message += bold(command + 'add (table) (character) (columns)') + ' - Update/Add a character to a table' + BR
+            message += bold(command + 'delete (table | character)') + ' - Delete a table/character'
+
         return message
 
     try:
@@ -53,6 +59,8 @@ async def char(ctx, *args):
             await leave.run(client, ctx)
         elif args[0] == 'template':
             await template.run(client, ctx, args)
+        elif args[0] == 'add':
+            await add.run(client, ctx, args, parameters['add'])
         else:
             await status.run(client, ctx, args)
     except IndexError:
@@ -77,6 +85,10 @@ async def help():
     msg += bold('>>info') + ' - Find out who made this bot' + BR
     msg += bold('>>share') + ' - Add this bot to YOUR server!'
     await client.say(msg)
+
+@client.command(pass_context=True)
+async def test(ctx):
+    print(isinstance(ctx.message.server.id, str))
 
 
 client.run(TOKEN)
