@@ -2,7 +2,7 @@ import json
 import discord
 from discord.ext import commands
 from modules.chat_utils import *
-from char import leave, list, take, status, template, add
+from char import leave, list, take, status, template, add, delete
 
 def __init__():
     with open('config.json') as jsonFile:
@@ -46,7 +46,7 @@ async def char(ctx, *args):
             message += bold(command + 'template (columns)') + ' - Update the template' + BR
             message += bold(command + 'create (table)') + ' - Create a new table' + BR
             message += bold(command + 'add (table) (character) (columns)') + ' - Update/Add a character to a table' + BR
-            message += bold(command + 'delete (table | character)') + ' - Delete a table/character'
+            message += bold(command + 'del (table | character)') + ' - Delete a table/character'
 
         return message
 
@@ -61,6 +61,8 @@ async def char(ctx, *args):
             await template.run(client, ctx, args)
         elif args[0] == 'add':
             await add.run(client, ctx, args, parameters['add'])
+        elif args[0] == 'del':
+            await delete.run(client, ctx, args, parameters['delete'])
         else:
             await status.run(client, ctx, args)
     except IndexError:
@@ -70,7 +72,7 @@ async def char(ctx, *args):
 @client.command()
 async def info():
     msg = ''
-    msg += 'CharacterBot v0.5' + BR
+    msg += 'CharacterBot v0.8' + BR
     msg += 'A bot that turns users into their favourite characters! Check `>>help` for usage.' + BR
     msg += 'Developed by Trifo Reborn#1676'
     await client.say(msg)

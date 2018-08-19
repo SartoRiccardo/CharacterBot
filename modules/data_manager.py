@@ -1,18 +1,22 @@
 import json
 import sqlite3
 from contextlib import closing
-from modules.data_getter import get_CharacterBot_path, get_columns, get_server_data, get_table_names
-
-def delete_character(ctx, character):
-    pass
-
+from modules.misc_utils import *
+from modules.data_getter import get_columns, get_server_data, get_table_names, get_character_info
 
 def create_table(ctx, name):
     pass
 
 
 def delete_table(ctx, table):
-    pass
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+
+    with closing(conn.cursor()) as c:
+        c.execute('DROP TABLE t{}'.format(table))
+        conn.commit()
+
+    conn.close()
 
 
 def update_template(ctx, columns):  #FIXME REFACTOR
@@ -103,13 +107,15 @@ def insert(ctx, condition):
 
     conn.close()
 
-def delete_char(ctx, condition):
+def delete_character(ctx, character):
     server = ctx.message.server.id
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
+    char_info = get_character_info(ctx, character)
+    table = get_dict_keys(char_info)[0]
+    name = char_info[table][0]
     with closing(conn.cursor()) as c:
-        print(condition.replace('DELETE FROM ', 'DELETE FROM t'))
-        c.execute(condition.replace('DELETE FROM ', 'DELETE FROM t'))
+        c.execute('DELETE FROM t{} WHERE name="{}"'.format(table, name))
         conn.commit()
 
     conn.close()

@@ -20,7 +20,7 @@ def get_tables(ctx):
 def get_columns(ctx):
     server = ctx.message.server.id
     with open(get_CharacterBot_path() + '/files/servers.json', 'r') as jsonFile:
-        ret = json.load(jsonFile)[str(server)]
+        ret = json.load(jsonFile)[server]
 
     return ret
 

@@ -1,6 +1,6 @@
 from modules.chat_utils import markdown, bold
 from modules.data_getter import get_tables, get_character_info
-from modules.data_manager import get_columns, insert, delete_char
+from modules.data_manager import get_columns, insert, delete_character
 from modules.misc_utils import in_range, get_dict_keys
 
 async def run(client, ctx, args, parameters):
@@ -12,7 +12,7 @@ async def run(client, ctx, args, parameters):
         'invalid_table': 'Invalid table: {}',
         'already_exists': 'Character already exists in table ' + markdown('{}') + '\n'
                           'To modify that character\'s info, use ' + markdown('{}'),
-        'invalid_parameters': 'Invalid parameters: this is what you should put:\n{}',
+        'invalid_parameters': 'Invalid parameters. This is what you should put:\n{}',
         'usage' : 'Usage: ' + markdown('>>char add (table) (character) (parameters)'),
         'success_added': 'Successfully added ' + bold('{}') + ' into ' + bold('{}'),
         'success_modified': 'Successfully modified ' + bold('{}') + '\'s data!'
@@ -59,8 +59,7 @@ async def run(client, ctx, args, parameters):
             await client.say(msgs['already_exists'].format(get_dict_keys(char_data)[0], correct_cmd))
             return
 
-        condition = 'DELETE FROM {} WHERE name="{}"'.format(table, char)
-        delete_char(ctx, condition)
+        delete_character(ctx, char)
 
         condition = 'INSERT INTO {} VALUES("{}", "nobody"'.format(table, char)
         for p in args[parameters['args']:]:
