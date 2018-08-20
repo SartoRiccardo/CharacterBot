@@ -204,11 +204,11 @@ To import a pre-made database, use the command `>>import`.
 Let's say we want to import a Boku no Hero Academia database. We'd do:
 
 ```
->>import bnha
+>>char import bnha
 ```
 
 It's that easy.
 
-If you want to check which presets we have available, run `>>import list`.
+If you want to check which presets we have available, run `>>char import list`.
 
 
