@@ -11,7 +11,7 @@ async def run(client, ctx, args, parameters):
                           markdown('>>char list {}') + ' to see who\'s there!',
         'spaces': 'You can\'t use spaces in your table name!' + '\n' +
                     'Suggestions: ' + markdown('{}') + ' ' + markdown('{}'),
-        'success': 'Table ' + bold('{}') + 'successfully created!'
+        'success': 'Table ' + bold('{}') + ' successfully created!'
     }
 
     if not ctx.message.author.server_permissions.administrator:

@@ -5,6 +5,7 @@ from modules.misc_utils import *
 
 
 def get_tables(server):
+    """Return the server's tables"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -16,7 +17,8 @@ def get_tables(server):
     return ret
 
 
-def get_columns(server): # also returns name and taken_by
+def get_columns(server):
+    """Return name, taken_by and the rest of the template"""
     with open(get_CharacterBot_path() + '/files/servers.json', 'r') as jsonFile:
         ret = json.load(jsonFile)[server]
 
@@ -24,6 +26,7 @@ def get_columns(server): # also returns name and taken_by
 
 
 def add_table(server, table):
+    """Add a table to the server's database"""
     with open(get_CharacterBot_path() + '/files/tables.json', 'r') as jsonFile:
         data = json.load(jsonFile)
 
@@ -44,7 +47,8 @@ def add_table(server, table):
         json.dumps(data, jsonFile)
 
 
-def get_character_info(server, character): # returns a dict contaning {table: (rows)}, empty dict if nothing is found
+def get_character_info(server, character):
+    """Return {table: (rows)}, {} if nothing is found"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -62,6 +66,7 @@ def get_character_info(server, character): # returns a dict contaning {table: (r
 
 
 def get_user_character(server, user):
+    """Return the character assigned to the user, None if nothing is found"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -79,6 +84,7 @@ def get_user_character(server, user):
 
 
 def fetch(server, condition):
+    """Return condition's results from server's database"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -89,23 +95,12 @@ def fetch(server, condition):
     return ret
 
 def get_server_data():
+    """Return the contents of servers.json"""
     path = get_CharacterBot_path() + '/files/servers.json'
     with open(path, 'r') as jsonFile:
         ret = json.load(jsonFile)
 
     return ret
-
-
-def get_table_names(cursor):
-    cursor.execute('SELECT name FROM sqlite_master WHERE type="table"')
-    raw = cursor.fetchall()  # gives list of tuples with one element
-
-    ret = []
-    for raw_name in raw:
-        ret.append(raw_name[0])
-
-    return ret
-
 
 def get_correct_table(server, t):
     """Return case-sensitive table or None"""
@@ -113,9 +108,11 @@ def get_correct_table(server, t):
 
     ret = None
     with closing(conn.cursor()) as c:
-        for correct_t in get_table_names(c):
-            if 't'+t.lower() == correct_t.lower():
-                ret = correct_t[1:]
+        for correct_t in get_tables(server):
+            print(t, correct_t)
+            if t.lower() == correct_t.lower():
+                ret = correct_t
+                break
 
     conn.close()
     return ret

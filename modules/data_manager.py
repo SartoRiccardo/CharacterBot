@@ -2,9 +2,10 @@ import json
 import sqlite3
 from contextlib import closing
 from modules.misc_utils import *
-from modules.data_getter import get_columns, get_server_data, get_table_names, get_character_info
+from modules.data_getter import get_columns, get_server_data, get_tables, get_character_info
 
 def create_table(server, name):
+    """Create a table in server's database"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -20,6 +21,7 @@ def create_table(server, name):
 
 
 def delete_table(server, table):
+    """Delete table in server's database"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -30,10 +32,8 @@ def delete_table(server, table):
 
 
 def update_template(server, columns):  #FIXME REFACTOR
+    """Replace server's template with columns"""
     def reformat_table(t):
-        c.execute('DROP TABLE IF EXISTS hold')
-        conn.commit()
-
         current_columns = get_columns(server)
         cmd = 'ALTER TABLE {} RENAME TO hold'.format(t)
         c.execute(cmd)
@@ -67,15 +67,13 @@ def update_template(server, columns):  #FIXME REFACTOR
         c.execute('DROP TABLE hold')
         conn.commit()
 
-    if server not in get_server_data():
-        register_server(server)
     db_dir = get_CharacterBot_path() + '/data/' + server + '.db'
     conn = sqlite3.connect(db_dir)
 
     with closing(conn.cursor()) as c:
-        tables = get_table_names(c)
+        tables = get_tables(server)
         for t in tables:
-            reformat_table(t)
+            reformat_table('t'+t)
 
     servers_dir = get_CharacterBot_path() + '/files/servers.json'
     with open(servers_dir, 'r') as jsonFile:
@@ -86,15 +84,8 @@ def update_template(server, columns):  #FIXME REFACTOR
     with open(servers_dir, 'w') as jsonFile:
         json.dump(data, jsonFile)
 
-
-def register_server(id):
-    servers = get_server_data()
-    servers[id] = ["name", "taken_by"]
-    path = get_CharacterBot_path() + '/files/servers.json'
-    with open(path, 'w') as jsonFile:
-        json.dump(servers, jsonFile)
-
 def modify(server, condition):
+    """Modify server's database using condition"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -104,6 +95,7 @@ def modify(server, condition):
     conn.close()
 
 def insert(server, condition):
+    """Insert condition in server's database"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -113,6 +105,7 @@ def insert(server, condition):
     conn.close()
 
 def delete_character(server, character):
+    """Deletes a character from server's database"""
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     char_info = get_character_info(server, character)

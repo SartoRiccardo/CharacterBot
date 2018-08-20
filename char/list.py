@@ -31,4 +31,4 @@ async def run(client, ctx, args, parameters):
     for c in characters:
         msg += markdown(c[0]) + '\n'
     await client.say('Use ' + markdown('>>char take (name)') + ' to become one of these characters!',
-               embed=get_embed(table, msg, discord.Colour.blue()))
+               embed=get_embed(table, msg, discord.Colour(0x546e7a)))

@@ -1,9 +1,10 @@
-from modules.misc_utils import get_CharacterBot_path
+from modules.misc_utils import get_CharacterBot_path, get_lines
 from modules.data_manager import update_template, create_table, delete_table, insert
 from modules.data_getter import get_tables
 import os
 
 def import_db(server, preset):
+    """Copy preset into server's database"""
     available_presets = get_presets()
 
     preset = preset.lower()
@@ -34,15 +35,8 @@ def import_db(server, preset):
             cmd += ')'
             insert(server, cmd)
 
-
-def get_lines(path):
-    with open(path, 'r') as f:
-        ret = len(f.read().strip().split('\n'))
-
-    return ret
-
-
 def get_presets():
+    """Return a list of all .txt files in the presets folder"""
     ret = os.listdir(get_CharacterBot_path() + '/presets')
 
     to_remove = []
