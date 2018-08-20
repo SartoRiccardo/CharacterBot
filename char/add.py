@@ -1,5 +1,5 @@
 from modules.chat_utils import markdown, bold
-from modules.data_getter import get_tables, get_character_info
+from modules.data_getter import get_tables, get_character_info, get_correct_table
 from modules.data_manager import get_columns, insert, delete_character
 from modules.misc_utils import in_range, get_dict_keys
 
@@ -27,7 +27,8 @@ async def run(client, ctx, args, parameters):
         return
 
     server = ctx.message.server.id
-    if args[parameters['table']] not in get_tables(server):
+    table = get_correct_table(server, args[parameters['table']])#table = args[parameters['table']]
+    if table not in get_tables(server):
         await client.say(msgs['invalid_table'].format(args[parameters['table']]))
         return
 
@@ -40,7 +41,6 @@ async def run(client, ctx, args, parameters):
 
     char = args[parameters['char']]
     char_data = get_character_info(server, char)
-    table = args[parameters['table']]
     if len(char_data) == 0:
         condition = 'INSERT INTO {} VALUES("{}", "nobody"'.format(table, char)
         for p in args[parameters['args']:]:
