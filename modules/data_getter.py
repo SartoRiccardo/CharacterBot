@@ -109,7 +109,6 @@ def get_correct_table(server, t):
     ret = None
     with closing(conn.cursor()) as c:
         for correct_t in get_tables(server):
-            print(t, correct_t)
             if t.lower() == correct_t.lower():
                 ret = correct_t
                 break

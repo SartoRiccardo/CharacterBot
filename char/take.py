@@ -1,3 +1,4 @@
+import discord
 from modules.data_getter import *
 from modules.data_manager import modify
 from modules.chat_utils import bold, markdown
@@ -33,7 +34,9 @@ async def run(client, ctx, args, parameters):
     modify(server, condition)
 
     await client.say(msgs['success'].format(char_data[table][name_index]))
+    if 'discord_role' in get_columns(server):
+        role_index = get_columns(server).index('discord_role')
+        role = discord.utils.get(ctx.message.server.roles, name=char_data[table][role_index])
+        if role in ctx.message.server.roles:
+            await client.add_roles(user, role)
     await client.change_nickname(user, char_data[table][name_index])
-    if 'discord_role' in get_tables(server):
-        discord_role = get_tables(server).index('discord_role')
-        await client.give_role(user, char_data[table][discord_role])
