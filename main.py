@@ -1,6 +1,9 @@
 import json
 import discord
 from discord.ext import commands
+from modules.data_getter import get_user_character, get_character_info
+from modules.data_manager import modify
+from modules.misc_utils import get_dict_keys
 from modules.chat_utils import *
 from char import leave, list, take, status, template, add, delete, create, import_preset
 
@@ -24,8 +27,20 @@ async def on_ready():
     await client.change_presence(game=discord.Game(name='>>char help'))
 
 @client.event
+async def on_message(message):
+    if '<@475707068196585473>' in message.content:
+        await client.send_message(message.channel, 'I\'m CharacterBot! Type ' + markdown('>>help') + ' to get started!')
+
+    await client.process_commands(message)
+
+@client.event
 async def on_member_remove(member):
-    await client.say('F')
+    server = member.server.id
+    char_name = get_user_character(server, member)
+    if char_name is not None:
+        table = get_dict_keys(get_character_info(server, char_name))[0]
+        modify(server, 'UPDATE {} SET taken_by="nobody" WHERE name="{}"'.format(table, char_name))
+
 
 BR, TAB = '\n', '\t'
 
