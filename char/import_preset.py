@@ -28,7 +28,8 @@ async def run(client, ctx, args, parameters):
     response = await client.wait_for_message(author=ctx.message.author, timeout = 30)
     try:
         if response is not None and response.clean_content == 'yes':
-            import_db(ctx, to_import)
+            server = ctx.message.server.id
+            import_db(server, to_import)
             await client.say(msgs['success'].format(to_import))
         else:
             await client.say(msgs['failure'].format(to_import))

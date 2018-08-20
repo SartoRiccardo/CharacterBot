@@ -23,6 +23,7 @@ async def run(client, ctx, args, parameters):
         return
 
     to_create = args[parameters['table']]
+    server = ctx.message.server.id
 
     if len(args[parameters['table']:]) > len(parameters) or ' ' in to_create:
         camelCase, snake_case = [], []
@@ -36,9 +37,9 @@ async def run(client, ctx, args, parameters):
         await client.say(msgs['spaces'].format(''.join(camelCase), '_'.join(snake_case)))
         return
 
-    if get_correct_table(ctx, to_create) is not None:
+    if get_correct_table(server, to_create) is not None:
         await client.say(msgs['already_exists'].format(to_create, to_create))
         return
 
-    create_table(ctx, to_create)
+    create_table(server, to_create)
     await client.say(msgs['success'].format(to_create))

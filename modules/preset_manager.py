@@ -3,7 +3,7 @@ from modules.data_manager import update_template, create_table, delete_table, in
 from modules.data_getter import get_tables
 import os
 
-def import_db(ctx, preset):
+def import_db(server, preset):
     available_presets = get_presets()
 
     preset = preset.lower()
@@ -16,15 +16,15 @@ def import_db(ctx, preset):
         data = f.read().strip().split('\n')
 
     template = data[0].strip().split(';')
-    update_template(ctx, template)
+    update_template(server, template)
 
-    for t in get_tables(ctx):
-        delete_table(ctx, t)
+    for t in get_tables(server):
+        delete_table(server, t)
 
     for i in range(1, lines):
         if ';' not in data[i]:
             table = data[i].strip()
-            create_table(ctx, table)
+            create_table(server, table)
 
         else:
             row = data[i].strip().split(';')
@@ -32,7 +32,7 @@ def import_db(ctx, preset):
             for j in range(1, len(row)):
                 cmd += ', "{}"'.format(row[j])
             cmd += ')'
-            insert(ctx, cmd)
+            insert(server, cmd)
 
 
 def get_lines(path):

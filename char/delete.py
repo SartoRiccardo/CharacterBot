@@ -20,22 +20,23 @@ async def run(client, ctx, args, parameters):
     if not in_range(parameters['to_delete'], args):
         await client.say(msgs['usage'])
 
+    server = ctx.message.server.id
     to_delete = args[parameters['to_delete']]
-    char_info = get_character_info(ctx, to_delete)
+    char_info = get_character_info(server, to_delete)
 
-    cs_to_delete = get_correct_table(ctx, to_delete)
+    cs_to_delete = get_correct_table(server, to_delete)
     if cs_to_delete is not None:
         await client.say(msgs['confirmation'])
         response = await client.wait_for_message(author=ctx.message.author, timeout = 30)
 
         if response is not None and response.clean_content == 'yes':
-            delete_table(ctx, to_delete)
+            delete_table(server, to_delete)
             await client.say(msgs['success'].format(cs_to_delete))
         else:
             await client.say(msgs['failure'].format(cs_to_delete))
 
     elif not char_info == {}:
-        delete_character(ctx, to_delete)
+        delete_character(server, to_delete)
         await client.say(msgs['success'].format(to_delete))
 
     else:

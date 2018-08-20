@@ -12,10 +12,11 @@ async def run(client, ctx, args, parameters):
         await client.say(msgs['usage'])
         return
 
-    table = get_correct_table(ctx, args[parameters['table']])
-    if table not in get_tables(ctx):
+    server = ctx.message.server.id
+    table = get_correct_table(server, args[parameters['table']])
+    if table not in get_tables(server):
         tables = ''
-        for t in get_tables(ctx):
+        for t in get_tables(server):
             tables += markdown(t).lower() + ' '
         await client.say(msgs['invalid_param'].format(args[parameters['table']], tables))
         return
@@ -25,7 +26,7 @@ async def run(client, ctx, args, parameters):
     if in_range(parameters['role'], args):
         searcher += ' WHERE taken_by="nobody"'
 
-    characters = fetch(ctx, searcher)
+    characters = fetch(server, searcher)
     msg = ''
     for c in characters:
         msg += markdown(c[0]) + '\n'

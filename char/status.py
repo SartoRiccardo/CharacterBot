@@ -7,8 +7,9 @@ async def run(client, ctx, args):
     character = ' '.join(args)
     special_columns = ('taken_by', 'thumbnail', 'img' 'discord_role')
 
-    info = get_character_info(ctx, character)
-    attributes = list(get_columns(ctx))
+    server = ctx.message.server.id
+    info = get_character_info(server, character)
+    attributes = list(get_columns(server))
 
     msg = ''
     table = get_dict_keys(info)[0]

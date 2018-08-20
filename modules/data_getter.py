@@ -4,8 +4,7 @@ from contextlib import closing
 from modules.misc_utils import *
 
 
-def get_tables(ctx):
-    server = ctx.message.server.id
+def get_tables(server):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -17,20 +16,18 @@ def get_tables(ctx):
     return ret
 
 
-def get_columns(ctx): # also returns name and taken_by
-    server = ctx.message.server.id
+def get_columns(server): # also returns name and taken_by
     with open(get_CharacterBot_path() + '/files/servers.json', 'r') as jsonFile:
         ret = json.load(jsonFile)[server]
 
     return ret
 
 
-def add_table(ctx, table):
+def add_table(server, table):
     with open(get_CharacterBot_path() + '/files/tables.json', 'r') as jsonFile:
         data = json.load(jsonFile)
 
     data['tables'].append(table)
-    server = ctx.message.server.id
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -47,13 +44,12 @@ def add_table(ctx, table):
         json.dumps(data, jsonFile)
 
 
-def get_character_info(ctx, character): # returns a dict contaning {table: (rows)}, empty dict if nothing is found
-    server = ctx.message.server.id
+def get_character_info(server, character): # returns a dict contaning {table: (rows)}, empty dict if nothing is found
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         ret = {}
-        tables = get_tables(ctx)
+        tables = get_tables(server)
         for t in tables:
             c.execute('SELECT * FROM t{} WHERE LOWER(name)=LOWER("{}")'.format(t, character))
             info = c.fetchall()
@@ -65,14 +61,12 @@ def get_character_info(ctx, character): # returns a dict contaning {table: (rows
     return ret
 
 
-def get_user_character(ctx):
-    user = ctx.message.author
-    server = ctx.message.server.id
+def get_user_character(server, user):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         ret = None
-        tables = get_tables(ctx)
+        tables = get_tables(server)
         for t in tables:
             c.execute('SELECT name FROM t{} WHERE taken_by="{}"'.format(t, user))
             info = c.fetchall()
@@ -84,8 +78,7 @@ def get_user_character(ctx):
     return ret
 
 
-def fetch(ctx, condition):
-    server = ctx.message.server.id
+def fetch(server, condition):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -114,9 +107,8 @@ def get_table_names(cursor):
     return ret
 
 
-def get_correct_table(ctx, t):
+def get_correct_table(server, t):
     """Return case-sensitive table or None"""
-    server = ctx.message.server.id
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     ret = None

@@ -26,19 +26,20 @@ async def run(client, ctx, args, parameters):
         await client.say(msgs['usage'])
         return
 
-    if args[parameters['table']] not in get_tables(ctx):
+    server = ctx.message.server.id
+    if args[parameters['table']] not in get_tables(server):
         await client.say(msgs['invalid_table'].format(args[parameters['table']]))
         return
 
-    if not len(args[parameters['args']:]) == len(get_columns(ctx))-2:
+    if not len(args[parameters['args']:]) == len(get_columns(server))-2:
         template = ''
-        for c in get_columns(ctx)[2:]:
+        for c in get_columns(server)[2:]:
             template += markdown(c) + ' '
         await client.say(msgs['invalid_parameters'].format(template))
         return
 
     char = args[parameters['char']]
-    char_data = get_character_info(ctx, char)
+    char_data = get_character_info(server, char)
     table = args[parameters['table']]
     if len(char_data) == 0:
         condition = 'INSERT INTO {} VALUES("{}", "nobody"'.format(table, char)
@@ -46,7 +47,7 @@ async def run(client, ctx, args, parameters):
             condition += ', "{}"'.format(p)
         condition += ')'
 
-        insert(ctx, condition)
+        insert(server, condition)
         await client.say(msgs['success_added'].format(char, table))
 
     else:
@@ -59,11 +60,11 @@ async def run(client, ctx, args, parameters):
             await client.say(msgs['already_exists'].format(get_dict_keys(char_data)[0], correct_cmd))
             return
 
-        delete_character(ctx, char)
+        delete_character(server, char)
 
         condition = 'INSERT INTO {} VALUES("{}", "nobody"'.format(table, char)
         for p in args[parameters['args']:]:
             condition += ', "{}"'.format(p)
         condition += ')'
-        insert(ctx, condition)
+        insert(server, condition)
         await client.say(msgs['success_modified'].format(char))

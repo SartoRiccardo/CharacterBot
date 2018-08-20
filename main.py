@@ -23,6 +23,10 @@ __init__()
 async def on_ready():
     await client.change_presence(game=discord.Game(name='>>char help'))
 
+@client.event
+async def on_member_remove(member):
+    await client.say('F')
+
 BR, TAB = '\n', '\t'
 
 @client.command(pass_context=True)

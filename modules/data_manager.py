@@ -4,13 +4,12 @@ from contextlib import closing
 from modules.misc_utils import *
 from modules.data_getter import get_columns, get_server_data, get_table_names, get_character_info
 
-def create_table(ctx, name):
-    server = ctx.message.server.id
+def create_table(server, name):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
         cmd = 'CREATE TABLE t{} (name TEXT, taken_by TEXT'.format(name)
-        for col in get_columns(ctx)[2:]:
+        for col in get_columns(server)[2:]:
             cmd += ', ' + col + ' TEXT'
         cmd += ')'
 
@@ -20,8 +19,7 @@ def create_table(ctx, name):
     conn.close()
 
 
-def delete_table(ctx, table):
-    server = ctx.message.server.id
+def delete_table(server, table):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -31,12 +29,12 @@ def delete_table(ctx, table):
     conn.close()
 
 
-def update_template(ctx, columns):  #FIXME REFACTOR
+def update_template(server, columns):  #FIXME REFACTOR
     def reformat_table(t):
         c.execute('DROP TABLE IF EXISTS hold')
         conn.commit()
 
-        current_columns = get_columns(ctx)
+        current_columns = get_columns(server)
         cmd = 'ALTER TABLE {} RENAME TO hold'.format(t)
         c.execute(cmd)
         conn.commit()
@@ -69,10 +67,9 @@ def update_template(ctx, columns):  #FIXME REFACTOR
         c.execute('DROP TABLE hold')
         conn.commit()
 
-    id = ctx.message.server.id
-    if id not in get_server_data():
-        register_server(id)
-    db_dir = get_CharacterBot_path() + '/data/' + id + '.db'
+    if server not in get_server_data():
+        register_server(server)
+    db_dir = get_CharacterBot_path() + '/data/' + server + '.db'
     conn = sqlite3.connect(db_dir)
 
     with closing(conn.cursor()) as c:
@@ -84,7 +81,7 @@ def update_template(ctx, columns):  #FIXME REFACTOR
     with open(servers_dir, 'r') as jsonFile:
         data = json.load(jsonFile)
 
-    data[id] = ["name", "taken_by"] + list(columns)
+    data[server] = ["name", "taken_by"] + list(columns)
 
     with open(servers_dir, 'w') as jsonFile:
         json.dump(data, jsonFile)
@@ -97,8 +94,7 @@ def register_server(id):
     with open(path, 'w') as jsonFile:
         json.dump(servers, jsonFile)
 
-def modify(ctx, condition):
-    server = ctx.message.server.id
+def modify(server, condition):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -107,8 +103,7 @@ def modify(ctx, condition):
 
     conn.close()
 
-def insert(ctx, condition):
-    server = ctx.message.server.id
+def insert(server, condition):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
@@ -117,11 +112,10 @@ def insert(ctx, condition):
 
     conn.close()
 
-def delete_character(ctx, character):
-    server = ctx.message.server.id
+def delete_character(server, character):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
-    char_info = get_character_info(ctx, character)
+    char_info = get_character_info(server, character)
     table = get_dict_keys(char_info)[0]
     name = char_info[table][0]
     with closing(conn.cursor()) as c:
