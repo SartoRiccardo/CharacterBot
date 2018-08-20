@@ -1,9 +1,10 @@
 /files
-/char/__pycache__/
-/modules/sqlite_utils.py
-/.idea
 /data
-/modules/__pycache__
-
-.DS_Store
+/test_stuff
 config.json
+
+#PYCharm stuff
+/char/__pycache__/
+/modules/__pycache__
+/.idea
+.DS_Store

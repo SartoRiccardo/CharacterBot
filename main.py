@@ -91,7 +91,7 @@ async def char(ctx, *args):
 @client.command()
 async def info():
     msg = ''
-    msg += 'CharacterBot v0.9' + BR
+    msg += 'CharacterBot v1.0' + BR
     msg += 'A bot that turns users into their favourite characters! Check `>>help` for usage.' + BR
     msg += 'Developed by Trifo Reborn'
     await client.say(msg)
