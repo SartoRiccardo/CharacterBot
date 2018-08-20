@@ -11,7 +11,7 @@ def create_table(ctx, name):
     with closing(conn.cursor()) as c:
         cmd = 'CREATE TABLE t{} (name TEXT, taken_by TEXT'.format(name)
         for col in get_columns(ctx)[2:]:
-            cmd += ', ' + col + 'TEXT'
+            cmd += ', ' + col + ' TEXT'
         cmd += ')'
 
         c.execute(cmd)
@@ -25,7 +25,7 @@ def delete_table(ctx, table):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
-        c.execute('DROP TABLE t{}'.format(table))
+        c.execute('DROP TABLE IF EXISTS t{}'.format(table))
         conn.commit()
 
     conn.close()
@@ -33,41 +33,40 @@ def delete_table(ctx, table):
 
 def update_template(ctx, columns):  #FIXME REFACTOR
     def reformat_table(t):
-        c.execute('DROP TABLE IF EXISTS temp')
+        c.execute('DROP TABLE IF EXISTS hold')
         conn.commit()
 
         current_columns = get_columns(ctx)
-        command = 'ALTER TABLE {} RENAME TO temp'.format(t)
-        c.execute(command)
+        cmd = 'ALTER TABLE {} RENAME TO hold'.format(t)
+        c.execute(cmd)
         conn.commit()
 
-        command = 'CREATE TABLE {} (name TEXT, taken_by TEXT'.format(t)
+        cmd = 'CREATE TABLE {} (name TEXT, taken_by TEXT'.format(t)
         for col in columns:
-            command += ', {} TEXT'.format(col)
-        command += ')'
-        c.execute(command)
+            cmd += ', {} TEXT'.format(col)
+        cmd += ')'
+        c.execute(cmd)
         conn.commit()
 
-        command = 'INSERT INTO {} (name, taken_by'.format(t)
+        cmd = 'INSERT INTO {} (name, taken_by'.format(t)
         for col in columns:
             if col in current_columns:
-                command += ', {}'.format(col)
-        command += ') SELECT name, taken_by'
+                cmd += ', {}'.format(col)
+        cmd += ') SELECT name, taken_by'
         for col in columns:
             if col in current_columns:
-                command += ', {}'.format(col)
-        command += ' FROM temp'
-        c.execute(command)
+                cmd += ', {}'.format(col)
+        cmd += ' FROM hold'
+        c.execute(cmd)
         conn.commit()
 
         for col in columns:
             if col not in current_columns:
-                command = 'UPDATE {} SET {}="N/A"'.format(t, col)
-                c.execute(command)
+                cmd = 'UPDATE {} SET {}="N/A"'.format(t, col)
+                c.execute(cmd)
                 conn.commit()
 
-        command = 'DROP TABLE temp'
-        c.execute(command)
+        c.execute('DROP TABLE hold')
         conn.commit()
 
     id = ctx.message.server.id
@@ -113,7 +112,6 @@ def insert(ctx, condition):
     conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
 
     with closing(conn.cursor()) as c:
-        print(condition.replace('INSERT INTO ', 'INSERT INTO t'))
         c.execute(condition.replace('INSERT INTO ', 'INSERT INTO t'))
         conn.commit()
 

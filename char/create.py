@@ -1,6 +1,6 @@
 from modules.chat_utils import bold, markdown
 from modules.data_manager import create_table
-from modules.data_getter import get_tables
+from modules.data_getter import get_correct_table
 from modules.misc_utils import in_range
 
 async def run(client, ctx, args, parameters):
@@ -36,8 +36,7 @@ async def run(client, ctx, args, parameters):
         await client.say(msgs['spaces'].format(''.join(camelCase), '_'.join(snake_case)))
         return
 
-    tables = get_tables(ctx)
-    if to_create in tables:
+    if get_correct_table(ctx, to_create) is not None:
         await client.say(msgs['already_exists'].format(to_create, to_create))
         return
 

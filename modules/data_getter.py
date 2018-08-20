@@ -112,3 +112,18 @@ def get_table_names(cursor):
         ret.append(raw_name[0])
 
     return ret
+
+
+def get_correct_table(ctx, t):
+    """Return case-sensitive table or None"""
+    server = ctx.message.server.id
+    conn = sqlite3.connect(get_CharacterBot_path() + '/data/{}.db'.format(server))
+
+    ret = None
+    with closing(conn.cursor()) as c:
+        for correct_t in get_table_names(c):
+            if 't'+t.lower() == correct_t.lower():
+                ret = correct_t[1:]
+
+    conn.close()
+    return ret

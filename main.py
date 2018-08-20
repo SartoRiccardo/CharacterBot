@@ -2,7 +2,7 @@ import json
 import discord
 from discord.ext import commands
 from modules.chat_utils import *
-from char import leave, list, take, status, template, add, delete, create
+from char import leave, list, take, status, template, add, delete, create, import_preset
 
 def __init__():
     with open('config.json') as jsonFile:
@@ -25,11 +25,6 @@ async def on_ready():
 
 BR, TAB = '\n', '\t'
 
-async def create_role(author, role_name, role_colour):
-    role = await client.create_role(author.server, name=role_name, colour=role_colour)
-    return role
-
-
 @client.command(pass_context=True)
 @commands.cooldown(1, 2, commands.BucketType.user)
 async def char(ctx, *args):
@@ -43,6 +38,7 @@ async def char(ctx, *args):
 
         if ctx.message.author.server_permissions.administrator:
             message += BR
+            message += bold(command + 'import (preset)') + ' - Import one of our pre-made databases' + BR
             message += bold(command + 'template (columns)') + ' - Update the template' + BR
             message += bold(command + 'create (table)') + ' - Create a new table' + BR
             message += bold(command + 'add (table) (character) (columns)') + ' - Update/Add a character to a table' + BR
@@ -65,6 +61,8 @@ async def char(ctx, *args):
             await delete.run(client, ctx, args, parameters['delete'])
         elif args[0] == 'create':
             await create.run(client, ctx, args, parameters['create'])
+        elif args[0] == 'import':
+            await import_preset.run(client, ctx, args, parameters['import'])
         else:
             await status.run(client, ctx, args)
     except IndexError:
@@ -74,9 +72,9 @@ async def char(ctx, *args):
 @client.command()
 async def info():
     msg = ''
-    msg += 'CharacterBot v0.8' + BR
+    msg += 'CharacterBot v0.9' + BR
     msg += 'A bot that turns users into their favourite characters! Check `>>help` for usage.' + BR
-    msg += 'Developed by Trifo Reborn#1676'
+    msg += 'Developed by Trifo Reborn'
     await client.say(msg)
 
 @client.command(pass_context=True)
@@ -86,13 +84,9 @@ async def share(ctx):
 @client.command()
 async def help():
     msg = bold('>>char') + ' - For all your roleplaying needs' + BR
-    msg += bold('>>info') + ' - Find out who made this bot' + BR
-    msg += bold('>>share') + ' - Add this bot to YOUR server!'
+    msg += bold('>>info') + ' - Info about this bot' + BR
+    msg += bold('>>share') + ' - Add this bot to YOUR server'
     await client.say(msg)
-
-@client.command(pass_context=True)
-async def test(ctx):
-    print(isinstance(ctx.message.server.id, str))
 
 
 client.run(TOKEN)

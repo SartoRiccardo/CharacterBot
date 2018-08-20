@@ -1,0 +1,29 @@
+full_name;hero_name;gender;quirk;birthday;height;blood_type;thumbnail
+Class1A
+Yuga;Yuga Aoyama;Can't Stop Twinkling;M;Navel Laser;May 30;168 cm;O;
+Mina;Mina Hashido;Alien Queen;F;Acid;July 30;159 cm;AB;
+Tsuyu;Tsuyu Asui;Froppy;F;Frog;February 12;150 cm;B;
+Iida;Tenya Iida;Ingenium;M;Engine;August 22;179 cm;A;
+Uraraka;Ochaco Uraraka;Uravity;F;Zero Gravity;December 27;156 cm;B;
+Ojiro;Ojiro Mashirao;Tailman;M;Tail;May 28;169 cm;O;
+Kaminari;Denki Kaminari;Chargebolt;Electricity;M;June 29;168 cm;O;
+Kirishima;Ejiro Kirishima;Red Riot;Hardening;M;October 16;170 cm;O;
+Koda;Koji Koda;
+Sato;Rikido Sato;
+Shoji;Mezo Shoji;
+Jiro;Kyoka Jiro;
+Sero;Hanta Sero;
+Tokoyami;Fumikage Tokoyomi;
+Todoroki;Shoto Todoroki;
+Toru;Tory Hagakura;
+Bakugo;Katsuki Bakugo;
+Midoriya;Izuku Midoriya
+Mineta;Minoru Mineta;
+Yaoyorozu;Momo Yaoyorozu;
+Class1B
+
+LeagueOfVillains
+
+Teachers
+
+ProHeroes
