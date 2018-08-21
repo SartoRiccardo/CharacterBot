@@ -1,4 +1,5 @@
 import json
+import config
 import discord
 from discord.ext import commands
 from modules.data_getter import get_user_character, get_character_info
@@ -8,19 +9,12 @@ from modules.chat_utils import *
 from char import leave, list, take, status, template, add, delete, create, import_preset
 
 def __init__():
-    with open('config.json') as jsonFile:
-        data = json.load(jsonFile)
-
-        global TOKEN, client
-        TOKEN = data['TOKEN']
-        client = commands.Bot(command_prefix=data['prefix'])
-        client.remove_command('help')
-
     with open('files/char_parameters.json') as jsonFile:
         global parameters
         parameters = json.load(jsonFile)
 
-
+client = commands.Bot(command_prefix=config.PREFIX)
+client.remove_command('help')
 __init__()
 @client.event
 async def on_ready():
@@ -107,5 +101,4 @@ async def help():
     msg += bold('>>share') + ' - Add this bot to YOUR server'
     await client.say(msg)
 
-
-client.run(TOKEN)
+client.run(config.TOKEN)

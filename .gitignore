@@ -1,7 +1,7 @@
 /files
 /data
 /test_stuff
-config.json
+config.*
 
 #PYCharm stuff
 /char/__pycache__/
