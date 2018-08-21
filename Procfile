@@ -1,1 +1,1 @@
-web: python3.6 main.py
+worker: python3.6 main.py
