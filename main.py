@@ -1,5 +1,6 @@
 import json
-import config
+import os
+#import config
 import discord
 from discord.ext import commands
 from modules.data_getter import get_user_character, get_character_info
@@ -13,7 +14,7 @@ def __init__():
         global parameters
         parameters = json.load(jsonFile)
 
-client = commands.Bot(command_prefix=config.PREFIX)
+client = commands.Bot(command_prefix=">>")
 client.remove_command('help')
 __init__()
 @client.event
@@ -101,4 +102,4 @@ async def help():
     msg += bold('>>share') + ' - Add this bot to YOUR server'
     await client.say(msg)
 
-client.run(config.TOKEN)
+client.run(os.environ.get("TOKEN"))
