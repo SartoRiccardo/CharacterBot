@@ -1,0 +1,28 @@
+{
+  "list": {
+    "table": 1,
+    "role": 2
+  },
+
+  "take": {
+    "char": 1
+  },
+
+  "add": {
+    "table": 1,
+    "char": 2,
+    "args": 3
+  },
+
+  "delete": {
+    "to_delete": 1
+  },
+
+  "create": {
+    "table": 1
+  },
+
+  "import": {
+    "to_import": 1
+  }
+}
