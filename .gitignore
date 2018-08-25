@@ -1,5 +1,4 @@
-/files/servers.json
-/data
+/data/*
 /test_stuff
 config.*
 .env
