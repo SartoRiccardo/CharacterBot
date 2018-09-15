@@ -29,7 +29,7 @@ async def run(client, ctx, args, parameters):
     try:
         if response is not None and response.clean_content == 'yes':
             server = ctx.message.server.id
-            import_db(server, to_import)
+            await import_db(server, to_import)
             await client.say(msgs['success'].format(to_import))
         else:
             await client.say(msgs['failure'].format(to_import))

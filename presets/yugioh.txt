@@ -3,7 +3,7 @@ DuelMonsters
 Yugi;Yugi Muto;Yugi Muto;M;Dark Magician/Magnet Warriors/Black Luster Soldier;https://vignette.wikia.nocookie.net/yugioh/images/7/73/Yugi_muto.png/revision/latest?cb=20170309011846
 Mai;Mai Valentine;Mai Kujaku;F;Harpie Lady;https://vignette.wikia.nocookie.net/yugioh/images/b/b8/MaiKujaku.png/revision/latest?cb=20161204180031
 Marik;Marik Ishar;Marik Ishtar;M;Winged Dragon of Ra;https://vignette.wikia.nocookie.net/yugioh/images/9/93/Yami_marik6.png/revision/latest?cb=20160312234525
-Ishizu;Ishizu Ishtar;Ishizu Ishtar;F;Gravekeeper's;https://vignette.wikia.nocookie.net/yugioh/images/1/1c/Ishizubcf.png/revision/latest?cb=20160722123630
+Ishizu;Ishizu Ishtar;Ishizu Ishtar;F;Gravekeeper''s;https://vignette.wikia.nocookie.net/yugioh/images/1/1c/Ishizubcf.png/revision/latest?cb=20160722123630
 Joey;Joey Wheeler;Jonouchi Katsuya;M;Red-Eyes/Warrior;https://vignette.wikia.nocookie.net/yugioh/images/9/97/Joey_wheeler.png/revision/latest?cb=20150108125221
 Kaiba;Seto Kaiba;Seto Kaiba;M;Blue-Eyes/Union;https://vignette.wikia.nocookie.net/yugioh/images/d/dc/Seto_Kaiba.png/revision/latest?cb=20170131011725
 Rex;Rex Raptor;Ryuzaki Dinosaur;M;Dinosaur;https://vignette.wikia.nocookie.net/yugioh/images/d/d6/Rex_Raptor.png/revision/latest?cb=20140501161806
@@ -34,7 +34,7 @@ Jim;Jim Crocodile Cook;Jim Crocodile Cook;M;Fossil;https://vignette.wikia.nocook
 Crowler;Vellian Crowler;Cronos de Medici;M;Ancient Gear;https://vignette.wikia.nocookie.net/yugioh/images/5/55/DrVellianCrowler.jpg/revision/latest?cb=20110705014258
 Zane;Zane Truesdale;Ryo Marufuji;M;Cyber Dragon/Cyberdark;https://vignette.wikia.nocookie.net/yugioh/images/5/58/ZaneTruesdale.png/revision/latest?cb=20160907172703
 Atticus;Atticus Rhodes;Fubuki Tenjoin;M;Red-Eyes/Sphere;https://vignette.wikia.nocookie.net/yugioh/images/d/dd/10join.jpg/revision/latest?cb=20130514075155
-Axel;Axel Brodie;Austin O'Brien;M;Volcanic;https://vignette.wikia.nocookie.net/yugioh/images/7/75/Axel_Brodie.png/revision/latest?cb=20111231104039
+Axel;Axel Brodie;Austin O''Brien;M;Volcanic;https://vignette.wikia.nocookie.net/yugioh/images/7/75/Axel_Brodie.png/revision/latest?cb=20111231104039
 Nightshroud;Nightshroud;Darkness;M;Darkness;https://vignette.wikia.nocookie.net/yugioh/images/2/2a/DARKNESS.jpg/revision/latest?cb=20090709150227
 Bob;Bob Banter;Kanda Tsugio;M;Quiz Panel;https://vignette.wikia.nocookie.net/yugioh/images/d/da/Bobbehindthe.jpg/revision/latest?cb=20170625184352
 Lorenzo;Lorenzo;Ryusei Gin;M;B.E.S.;https://vignette.wikia.nocookie.net/yugioh/images/e/e7/GinRyusei.jpg/revision/latest?cb=20070616001448
@@ -64,7 +64,7 @@ Kite;Kite Tenjo;Kaito Tenjo;M;Galaxy/Photon;https://vignette.wikia.nocookie.net/
 Shark;Reginald Kastle;Ryoga Kamishiro;M;Shark;https://vignette.wikia.nocookie.net/yugioh/images/c/cc/RyogaKamishiro.png/revision/latest?cb=20150724012744
 Quattro;Thomas Arclight;IV;M;Gimmick Puppet;https://vignette.wikia.nocookie.net/yugioh/images/6/65/IV.png/revision/latest?cb=20160128052236
 Rio;Rio Kastle;Rio Kamishiro;F;WATER Winged Beast;https://vignette.wikia.nocookie.net/yugioh/images/0/05/Rio_portal.jpg/revision/latest?cb=20121204001326
-Alito;Alito;Alito;M;Battlin' Boxer;https://vignette.wikia.nocookie.net/yugioh/images/e/e7/Alit%27s_trueform.png/revision/latest?cb=20130114054450
+Alito;Alito;Alito;M;Battlin'' Boxer;https://vignette.wikia.nocookie.net/yugioh/images/e/e7/Alit%27s_trueform.png/revision/latest?cb=20130114054450
 Mizar;Mizar;Mizael;M;Galaxy Dragon;https://vignette.wikia.nocookie.net/yugioh/images/d/de/Mizar_Barian.png/revision/latest?cb=20150419010635
 Girag;Girag;Kiraku Souhachi;M;Hand;https://vignette.wikia.nocookie.net/yugioh/images/c/cf/Gilag%27s_trueform.png/revision/latest?cb=20130120200627
 Trey;Michael Arclight;III;M;Chronomaly;https://vignette.wikia.nocookie.net/yugioh/images/1/12/Trey.png/revision/latest?cb=20150412091002
@@ -97,9 +97,10 @@ Soulburner;Homura Takeru;Homura Takeru;M;Salamangreat;https://vignette.wikia.noc
 Blue Angel;Skye Zaizen;Aoi Zaizen;F;Trickstar;https://vignette.wikia.nocookie.net/yugioh/images/3/33/AoiZaizen.png/revision/latest?cb=20170615084840
 Ghost Girl;Emma Bessho;Emma Bessho;F;Altergeist;https://vignette.wikia.nocookie.net/yugioh/images/e/e5/EmaBessho.png/revision/latest?cb=20171101113136
 Revolver;Varis;Ryoken Kogami;M;Rokket;https://vignette.wikia.nocookie.net/yugioh/images/0/0e/RyokenKogami.png/revision/latest?cb=20180314133642
-Go Onizuka;Gore Onizuka;Go Onizuka;M;Gouki/Dinowrestler;https://vignette.wikia.nocookie.net/yugioh/images/a/a7/GoOnizuka.png/revision/latest?cb=20180216125315
+Go Onizuka;George Gore;Go Onizuka;M;Gouki/Dinowrestler;https://vignette.wikia.nocookie.net/yugioh/images/a/a7/GoOnizuka.png/revision/latest?cb=20180216125315
 Spectre;Spectre;Spectre;M;Sun Plants;https://vignette.wikia.nocookie.net/yugioh/images/f/f1/Specter.png/revision/latest?cb=20180203213049
 Zaizen;Akira Zaizen;Akira Zaizen;M;Tindangle;https://vignette.wikia.nocookie.net/yugioh/images/d/d2/AkiraZaizen.png/revision/latest?cb=20180425225057
 Brave Max;Naoki Shima;Naoki Shima;M;Baboon;https://vignette.wikia.nocookie.net/yugioh/images/7/7b/NaokiShima.png/revision/latest?cb=20170510212230
 Blood Shepard;TBA;Kengo Dojun;M;Battledrone;https://vignette.wikia.nocookie.net/yugioh/images/2/2f/KengoDojun.png/revision/latest?cb=20180502121258
 Bohman;TBA;Bohman;M;Hydradrive;https://vignette.wikia.nocookie.net/yugioh/images/7/78/Bohman.png/revision/latest?cb=20180419060242
+Earth;Earth;Earth;M;G Golem;https://vignette.wikia.nocookie.net/yugioh/images/d/d6/EarthFullBody.png/revision/latest?cb=20180829131110

@@ -13,22 +13,22 @@ async def run(client, ctx, args, parameters):
         return
 
     server = ctx.message.server.id
-    table = get_correct_table(server, args[parameters['table']])
-    if table not in get_tables(server):
+    t = args[parameters['table']].lower()
+    if t not in await get_tables(server):
         tables = ''
-        for t in get_tables(server):
+        for t in await get_tables(server):
             tables += markdown(t).lower() + ' '
         await client.say(msgs['invalid_param'].format(args[parameters['table']], tables))
         return
 
 
-    searcher = 'SELECT name FROM {}'.format(table)
     if in_range(parameters['role'], args):
-        searcher += ' WHERE taken_by="nobody"'
+        characters = await fetch(server, t, "name", "taken_by='nobody'")
+    else:
+        characters = await fetch(server, t, "name")
 
-    characters = fetch(server, searcher)
     msg = ''
     for c in characters:
         msg += markdown(c[0]) + '\n'
-    await client.say('Use ' + markdown('>>char take (name)') + ' to become one of these characters!',
-               embed=get_embed(table, msg, discord.Colour(0x546e7a)))
+    await client.say(f"Use {markdown('>>char take (name)')} to become one of these characters!",
+               embed=get_embed(t[0].upper()+t[1:].lower(), msg, discord.Colour(0x546e7a)))

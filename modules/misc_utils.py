@@ -1,15 +1,10 @@
 import os
 
+project_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+
 def get_dict_keys(dict):
     """Return a list containing dict's keys"""
     ret = list(dict.keys())
-    return ret
-
-
-def get_CharacterBot_path():
-    """Return CharacterBot's path"""
-    ret = os.path.dirname(os.path.abspath(__file__))
-    ret = str.join('/', ret.split('/')[:-1])
     return ret
 
 def in_range(i, list):
@@ -22,3 +17,6 @@ def get_lines(path):
         ret = len(f.read().strip().split('\n'))
 
     return ret
+
+def first_upper(string):
+    return string[0].upper() + string[1:]

@@ -1,10 +1,10 @@
 import json
-import os
-#import config
+import config
 import discord
+import asyncio
 from discord.ext import commands
-from modules.data_getter import get_user_character, get_character_info
-from modules.data_manager import modify
+from modules.data_getter import get_user_character, get_character_info, start_database
+from modules.data_manager import modify, pgdelete
 from modules.misc_utils import get_dict_keys
 from modules.chat_utils import *
 from char import leave, list, take, status, template, add, delete, create, import_preset
@@ -17,6 +17,7 @@ def __init__():
 client = commands.Bot(command_prefix=">>")
 client.remove_command('help')
 __init__()
+
 @client.event
 async def on_ready():
     await client.change_presence(game=discord.Game(name='>>char help'))
@@ -102,4 +103,17 @@ async def help():
     msg += bold('>>share') + ' - Add this bot to YOUR server'
     await client.say(msg)
 
-client.run(os.environ.get("TOKEN"))
+
+@client.command(pass_context=True)
+async def test(ctx):
+    server = ctx.message.server.id
+    user = ctx.message.author
+    if user == "Trifo Reborn#1676":
+        # Do stuff
+
+
+        pass
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(start_database())
+client.run(config.TOKEN)

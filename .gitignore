@@ -2,6 +2,7 @@
 /test_stuff
 config.*
 .env
+/extensions
 
 #PYCharm stuff
 /char/__pycache__/
