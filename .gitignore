@@ -3,6 +3,7 @@
 config.*
 .env
 /extensions
+cogs_main.py
 
 #PYCharm stuff
 /char/__pycache__/

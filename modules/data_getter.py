@@ -2,8 +2,6 @@ import json
 import asyncio
 import asyncpg
 import config
-import sqlite3
-from contextlib import closing
 from modules.misc_utils import *
 
 credentials = {
