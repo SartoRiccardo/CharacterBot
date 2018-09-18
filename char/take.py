@@ -8,6 +8,7 @@ async def run(client, ctx, args, parameters):
         "already_assigned": "You are already assigned to " + bold("{}") + '!',
         "usage": "Usage: " + markdown(">>char take (char)"),
         "invalid_param": "Invalid parameter: {}.",
+        "unavailable": "That character is already taken.",
         "success": "You are now " + bold("{}") + '!'
     }
 
@@ -25,6 +26,10 @@ async def run(client, ctx, args, parameters):
     char_data = await get_character_info(server, character)
     if char_data == {}:
         await client.say(msgs["invalid_param"].format(character))
+        return
+
+    if char_data["taken_by"] != "nobody":
+        await client.say(msgs["unavailable"])
         return
 
     table, name = char_data["table"], char_data["name"]
