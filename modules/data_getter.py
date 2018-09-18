@@ -10,14 +10,15 @@ credentials = {
     'host': config.HOST,
     'database': config.DATABASE
 }
-con = None
+
+
 async def start_database():
     global con
     con = await asyncpg.create_pool(**credentials)
 
+
 def get_con():
     return con
-
 
 
 async def get_tables(server):
@@ -31,15 +32,14 @@ async def get_tables(server):
         if f"s{server}t" in r["table_name"]:
             ret.append(r["table_name"].replace(f"s{server}t", ''))
 
-    print()
     return ret
 
 
 async def get_columns(server):
     """Return name, taken_by and the rest of the template"""
     with open(os.path.join(project_path,
-                      "files",
-                      "servers.json"), 'r') as jsonFile:
+                           "files",
+                           "servers.json"), 'r') as jsonFile:
         ret = json.load(jsonFile)[server]
 
     return ret
@@ -65,16 +65,15 @@ async def get_user_character(server, user):
     tables = await get_tables(server)
     for t in tables:
         info = await fetch(server, t, "name", f"taken_by='{user}'")
-        print(info)
         if len(info) > 0:
-            ret = info[0][0]
+            ret = info[0]["name"]
             break
 
     return ret
 
 
 async def fetch(server, table, to_return, *conditions):
-    """Return condition's results from server's database"""
+    """Return query's results from server's database"""
     if to_return == "all":
         query = f"SELECT * FROM s{server}t{table}"
     else:
@@ -85,7 +84,13 @@ async def fetch(server, table, to_return, *conditions):
 
     query += ';'
 
-    return tuple(await get_con().fetch(query))
+    dprint(query)
+
+    ret = await get_con().fetch(query)
+    ret = [dict(r) for r in ret]
+
+    return ret
+
 
 async def get_server_data():
     """Return the contents of servers.json"""

@@ -1,6 +1,8 @@
 import os
+import aiohttp
 
 project_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+debug = False
 
 def get_dict_keys(dict):
     """Return a list containing dict's keys"""
@@ -18,5 +20,18 @@ def get_lines(path):
 
     return ret
 
-def first_upper(string):
-    return string[0].upper() + string[1:]
+
+async def get_file_content(link):
+    """Return the content of the file the link points to"""
+    async with aiohttp.ClientSession() as cs:
+        async with cs.get(link) as f:
+            content = await f.read()
+            print(content)
+
+
+def dprint(*args):
+    if debug:
+        msg = ''
+        for a in args:
+            msg += f"{a} "
+        print(msg)

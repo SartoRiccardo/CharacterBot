@@ -13,7 +13,6 @@ async def create_table(server, name): #OK
     for col in columns[2:]:
         query += f",{col} TEXT"
     query += ');'
-    print(query)
 
     await get_con().execute(query)
 
@@ -47,7 +46,6 @@ async def update_template(server, columns):  #FIXME REFACTOR
             if col in current_columns:
                 query += f", {col}"
         query += " FROM hold;"
-        print(f"{query}\n\n\n\n\n")
         await get_con().execute(query)
 
         # Inserts "N/A" where data isn't present
@@ -79,7 +77,6 @@ async def modify(server, table, to_modify, *conditions): #OK
         query += f" WHERE {'AND'.join(list(conditions))}"
     query += ';'
 
-    print(f"\n{query}\n")
     await get_con().execute(query)
 
 
