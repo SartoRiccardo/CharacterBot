@@ -21,28 +21,42 @@ def get_con():
     return con
 
 
-async def get_tables(server):
-    """Return the server's tables"""
+async def get_prefix(server):
+    try:
+        query = f"SELECT prefix FROM servers WHERE server='{server}';"
+        ret = dict((await get_con().fetch(query))[0])["prefix"]
+        return ret
+
+    except Exception:
+        return '$'
+
+
+async def get_tables(server, bk=False):
+    """Return the server's tables or the server's backup if bk=True"""
     raw = await con.fetch("SELECT table_name FROM information_schema.tables "
                           "WHERE table_schema='public' "
                           "AND table_type='BASE TABLE';")
 
+    condition = f"s{server}t"
+    if bk:
+        condition = f"bk{server}t"
+
     ret = []
     for r in raw:
-        if f"s{server}t" in r["table_name"]:
-            ret.append(r["table_name"].replace(f"s{server}t", ''))
+        if condition in r["table_name"]:
+            ret.append(r["table_name"].replace(condition, ''))
 
+    dprint(ret)
     return ret
 
 
-async def get_columns(server):
-    """Return name, taken_by and the rest of the template"""
-    with open(os.path.join(project_path,
-                           "files",
-                           "servers.json"), 'r') as jsonFile:
-        ret = json.load(jsonFile)[server]
+async def get_columns(server, bk=False):
+    to_return = "template"
+    if bk:
+        to_return = "backup"
+    query = f"SELECT {to_return} FROM servers WHERE server='{server}';"
 
-    return ret
+    return dict((await get_con().fetch(query))[0])[to_return].split(" ")
 
 
 async def get_character_info(server, character):
@@ -72,18 +86,20 @@ async def get_user_character(server, user):
     return ret
 
 
-async def fetch(server, table, to_return, *conditions):
+async def fetch(server, table, to_return, *conditions, bk=False):
     """Return query's results from server's database"""
     if to_return == "all":
         query = f"SELECT * FROM s{server}t{table}"
     else:
         query = f"SELECT {to_return} FROM s{server}t{table}"
 
+    if bk:
+        query = query.replace("FROM s", "FROM bk")
+
     if len(conditions) != 0:
         query += f" WHERE {'AND'.join(list(conditions))}"
 
     query += ';'
-
     dprint(query)
 
     ret = await get_con().fetch(query)

@@ -1,3 +1,5 @@
+/modules/debug
+printpurger.py
 /test_stuff
 config.*
 .env

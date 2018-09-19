@@ -1,8 +1,10 @@
+import aiohttp
 import discord
 from discord.ext import commands
-from modules.preset_manager import import_db, get_presets
+from modules.preset_manager import import_db, get_presets, load_file_preset
 from modules.misc_utils import *
-from modules.data_manager import delete_table, pgdelete, update_template, create_table, insert
+from modules.data_manager import *
+#from modules.data_manager import delete_table, pgdelete, update_template, create_table, insert
 from modules.data_getter import get_character_info, get_tables, get_columns
 
 parameters = {
@@ -81,7 +83,7 @@ class Input:
             "usage": "Usage: `>>char create (table)`",
             "insufficient_permissions": "You don't have the permissions to do that!",
             "already_exists": "**{}** already exists! Try using `>>char list {}` to see who's there!",
-            "spaces": "You can't use spaces in your table name!\nSuggestions: `{}` `{}`",
+            "spaces": "You can't use spaces in your table name!\nTry using: `{}`",
             "success": "Table **{}** successfully created!"
         }
 
@@ -100,15 +102,11 @@ class Input:
 
         # Checks if there are spaces in the table name
         if len(args[pc.index("table"):]) > 1 or ' ' in to_create:
-            camel_case, snake_case = [], []
+            snake_case = []
             for i in range(pc.index("table"), len(args)):
-                camel_case += args[i].split(' ')
                 snake_case += args[i].split(' ')
 
-            camel_case = [camel_case[i][0].upper() + camel_case[i][1:] for i in range(len(camel_case))]
-            camel_case[0] = camel_case[0].lower()
-
-            await self.client.say(msgs["spaces"].format(''.join(camel_case), '_'.join(snake_case)))
+            await self.client.say(msgs["spaces"].format('_'.join(snake_case)))
             return
 
         server = ctx.message.server.id
@@ -162,26 +160,52 @@ class Input:
             await self.client.say(msgs["not_found"].format(to_delete))
 
     @commands.command(pass_context=True, aliases=["import"])
-    async def load(self, ctx, preset):
+    async def load(self, ctx, preset=None):
         msgs = {
             "insufficient_permissions": "You don't have the permissions to do that",
             "nonexistent": "The preset **{}** doesn't exist!\n"
                            "Do `>>import list` to see what's available!",
             "confirmation": "All of your current characters will be deleted. Type `yes` to continue",
             "success": "Successfully imported **{}**!",
-            "failure": "Did not import **{}**"
+            "failure": "Did not import **{}**",
+            "not_csv_file": "Unsupported file type.\n"
+                            "Export your Excel/LibreOffice table into `.csv`",
+            "csv_no_name_taken_by": "Your file doesn't have a `name` and/or `taken_by` column. "
+                                    "Check out the template with `>>download example` if you're confused!",
+            "csv_no_table_name": "Your table doesn't have a name.\n"
+                                 "Check out the template with `>>download example` if you're confused!",
+            "csv_invalid_table_name": "Your table name can't contain spaces",
+            "csv_duplicate_column_name": "Your table has two or more columns with the same name",
+            "csv_duplicate_char_name": "Your table has two or more characters with the same `name`. "
+                                  "This counts for different tables as well!",
         }
 
         if not ctx.message.author.server_permissions.administrator:
             await self.client.say(msgs["insufficient_permissions"])
             return
 
-        if preset.lower() == "list":
+        if preset is None and ctx.message.attachments == [] or \
+                preset is not None and preset.lower() == "list":
             available_presets = get_presets()
             msg = "Available presets: "
             for p in available_presets:
                 msg += f"`{p}` "
+            msg += "\nYou can also just write `>>import` and attach a csv file to it"
             await self.client.say(msg)
+            return
+
+        if preset is None and ctx.message.attachments != []:
+            link = ctx.message.attachments[0]["url"]
+            if link[-4:] != ".csv":
+                await self.client.say(msgs["not_csv_file"])
+                return
+
+            try:
+                await load_file_preset(ctx.message.server.id, link)
+                await self.client.say(msgs["success"].format(ctx.message.attachments[0]["filename"]))
+            except SyntaxError as e:
+                await self.client.say(msgs[str(e)])
+
             return
 
         await self.client.say(msgs["confirmation"])
@@ -199,11 +223,22 @@ class Input:
 
     @commands.command(pass_context=True)
     async def template(self, ctx, *args):
-        if ctx.message.author.server_permissions.administrator:
-            await update_template(ctx.message.server.id, args[1:])
-            await self.client.say("Template was updated!")
-        else:
-            await self.client.say("You don't have the permissions to do that!")
+        msgs = {
+            "insufficient_permissions": "You don't have the permissions to do that!",
+            "success": "Template was updated!",
+            "space_in_arg": "You can't put spaces in the template! "
+                            "Try using underscores instead!"
+        }
+
+        if not ctx.message.author.server_permissions.administrator:
+            await self.client.say(msgs["insufficient_permissions"])
+            return
+
+        try:
+            await update_template(ctx.message.server.id, args)
+            await self.client.say(msgs["success"])
+        except SyntaxError as e:
+            await self.client.say(msgs[str(e)])
 
 
 def setup(client):

@@ -1,0 +1,9 @@
+class1a;# “class1a” is a table. Tables are groups of characters.;# Deku, Uraraka and Bakugou are members of Class 1A, so we’ll place them in the table “class1a”.;# Table names can’t contain spaces.;;;
+name;taken_by;quirk;sex;# “name”, “taken_by”, “quirk” and “sex” are the columns of your table. These must remain the same throughout the file.;# “name” and “taken_by” are mandatory column names. They’re also case sensitive, so watch out for that!;# It’s recommended you put the column names lower case. The bot will automatically put uppercase the initials!
+Deku;nobody;One For All;M;;;
+Uraraka;nobody;Zero Gravity;F;;;
+Bakugou;nobody;Explosion;M;;;
+villains;# Again, “villains” is a table.;;;;;
+name;taken_by;quirk;sex;# see how these columns are the same as class1a’s.;;
+Tomura;nobody;Decay;M;;;
+Kurogiri;nobody;Warp Gate;M;# Delete all lines starting with “#”;;

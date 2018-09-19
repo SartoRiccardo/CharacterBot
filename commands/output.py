@@ -1,7 +1,9 @@
+import os
+import csv
 import discord
 from discord.ext import commands
 from discord.errors import HTTPException
-from modules.misc_utils import get_dict_keys
+from modules.misc_utils import get_dict_keys, project_path
 from modules.chat_utils import get_embed, first_upper, bold, strikethrough
 from modules.data_getter import fetch, get_tables, get_character_info, get_user_character, get_columns
 
@@ -87,6 +89,43 @@ class Output:
 
         await self.client.say(f"Use `>>char take (name)` to become one of these characters!",
                               embed=get_embed(first_upper(t), output, discord.Colour(0x546e7a)))
+
+    @commands.command(pass_context=True, aliases=["export"])
+    async def download(self, ctx, example=None):
+        if not ctx.message.author.server_permissions.administrator:
+            await self.client.say("You don't have the permissions to do that!")
+            return
+
+        if example == "example":
+            fout = os.path.join(project_path, "files", "example.csv")
+            await self.client.send_file(ctx.message.channel, fout)
+            return
+
+        server = ctx.message.server.id
+        tables = await get_tables(server)
+        columns = await get_columns(server)
+
+        path = os.path.join(project_path, "files", f"{server}.csv")
+        with open(path, "w+") as fout:
+            writer = csv.writer(fout)
+
+            for t in tables:
+                row = [t]
+                row += [' ' for i in range(len(columns)-1)]
+                writer.writerow(row)
+                writer.writerow(columns)
+
+                data = await fetch(server, t, "all")
+                for d in data:
+                    row = []
+                    for c in columns:
+                        row.append(d[c])
+
+                    writer.writerow(row)
+
+        await self.client.send_file(ctx.message.channel, path, filename="Server Data.csv")
+
+        os.remove(path)
 
 
 def setup(client):
