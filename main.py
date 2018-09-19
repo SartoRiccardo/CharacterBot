@@ -30,12 +30,12 @@ async def info():
     msg = f"""CharacterBot v{VERSION}
 A bot that helps users role play! Check `>>help` for usage.
 Developed by Trifo Reborn"""
-    await self.client.say(msg)
+    await client.say(msg)
 
 
 @commands.command(pass_context=True, aliases=["invite"])
 async def share(ctx):
-    await self.client.send_message(ctx.message.author, "https://bit.ly/CharacterBotInvite")
+    await client.send_message(ctx.message.author, "https://bit.ly/CharacterBotInvite")
 
 
 @client.command(pass_context=True)
