@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.errors import HTTPException
 from modules.misc_utils import get_dict_keys, project_path
 from modules.chat_utils import get_embed, first_upper, bold, strikethrough
-from modules.data_getter import fetch, get_tables, get_character_info, get_user_character, get_columns
+from modules.data_getter import fetch, get_tables, get_character_info, get_user_character, get_columns, get_prefix
 
 parameters = {
     "char": ["character"],
@@ -46,34 +46,37 @@ class Output:
             if role is not None:
                 e.colour = role.colour
 
+        prefix = await get_prefix(server)
         try:
-            await self.client.say(f"Like this character? Use `>>take {info['name']}` to become them!", embed=e)
+            await self.client.say(f"Like this character? Use `{prefix}take {info['name']}` to become them!", embed=e)
         except HTTPException:
             e.set_thumbnail(url='')
             e.set_image(url='')
-            await self.client.say(f"Like this character? Use `>>take {info['name']}` to become them!", embed=e)
+            await self.client.say(f"Like this character? Use `{prefix}take {info['name']}` to become them!", embed=e)
 
     @commands.command(pass_context=True, aliases=["list"])
     async def catalogue(self, ctx, *args):
         msgs = {
-            "usage": "Usage: `>>list (table)`",
-            "invalid_param": "Error: Table `{}` doesn't exist"
+            "usage": "Usage: `{}list (table)`",
+            "invalid_param": "Error: Table `{}` doesn't exist",
+            "tables": "Available tables: `{}`",
+            "success": "Use `{}take (name)` to become one of these characters!"
         }
 
         pl = parameters["list"]
         server = ctx.message.server.id
+        tables = await get_tables(server)
+        prefix = await get_prefix(server)
 
         if pl.index("table") >= len(args):
-            await self.client.say(msgs['usage'])
+            await self.client.say(msgs['usage'].format(prefix) + '\n' +
+                                  msgs["tables"].format("` `".join(tables)))
             return
 
         t = args[pl.index("table")].lower()
-        if t not in await get_tables(server):
-            tables = ''
-            for t in await get_tables(server):
-                tables += f"`{t}`"
-
-            await self.client.say(msgs['invalid_param'].format(args[pl.index("table")], tables))
+        if t not in tables:
+            await self.client.say(msgs['invalid_param'].format(args[pl.index("table")]) + '\n' +
+                                  msgs["tables"].format("` `".join(tables)))
             return
 
         characters = await fetch(server, t, "name")
@@ -87,7 +90,7 @@ class Output:
                 formatted_c = strikethrough(formatted_c)
             output += f"{formatted_c}\n"
 
-        await self.client.say(f"Use `>>char take (name)` to become one of these characters!",
+        await self.client.say(msgs["success"].format(prefix),
                               embed=get_embed(first_upper(t), output, discord.Colour(0x546e7a)))
 
     @commands.command(pass_context=True, aliases=["export"])

@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-from modules.data_getter import get_user_character, get_character_info, get_columns, get_tables, fetch
 from modules.data_manager import modify
+from modules.data_getter import get_user_character, get_character_info, get_columns, get_tables, fetch, get_prefix
 
 parameters = {
     "take": ["character"]
@@ -31,7 +31,7 @@ class RolePlay:
     @commands.command(pass_context=True)
     async def take(self, ctx, *args):
         msgs = {
-            "usage": "Usage: `>>char take (char)`",
+            "usage": "Usage: `{}take (char)`\nUse `{}list` to see what's available",
             "already_assigned": "You are already assigned to **{}**!",
             "invalid_param": "Invalid parameter: {}.",
             "unavailable": "That character is already taken.",
@@ -39,12 +39,13 @@ class RolePlay:
         }
 
         pt = parameters["take"]
+        user, server = ctx.message.author, ctx.message.server.id
 
         if pt.index("character") >= len(args):
-            await self.client.say(msgs["usage"])
+            prefix = await get_prefix(server)
+            await self.client.say(msgs["usage"].format(prefix, prefix))
             return
 
-        user, server = ctx.message.author, ctx.message.server.id
         user_char = await get_user_character(server, user)
         if user_char is not None:
             await self.client.say(msgs["already_assigned"].format(user_char))

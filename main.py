@@ -6,7 +6,7 @@ from modules.chat_utils import get_embed
 from modules.data_manager import start_servers_data, register_server, change_prefix
 from modules.data_getter import start_database, get_prefix
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 client = commands.Bot(command_prefix='$')
 client.remove_command('help')
 
@@ -50,10 +50,11 @@ async def prefix(ctx, newprefix):
     await client.say(f"Prefix changed to {newprefix}")
 
 
-@client.command()
-async def info():
+@client.command(pass_context=True)
+async def info(ctx):
+    prefix = await get_prefix(ctx.message.server.id)
     msg = f"""CharacterBot v{VERSION}
-A bot that helps users role play! Check `>>help` for usage.
+A bot that helps users role play! Check `{prefix}help` for usage.
 Developed by Trifo Reborn"""
     await client.say(msg)
 
@@ -63,61 +64,12 @@ async def share(ctx):
     await client.send_message(ctx.message.author, "https://bit.ly/CharacterBotInvite")
 
 
-@client.command(pass_context=True)
-async def help(ctx):
-    p = await get_prefix(ctx.message.server.id)
-
-    output = get_embed("CharacterBot Help", '', discord.Colour(0x546e7a))
-
-    output.add_field(name=f"{p}take (character)",
-                     value="Become the character you chose",
-                     inline=False)
-    output.add_field(name=f"{p}leave",
-                     value="Leave your current character",
-                     inline=False)
-    output.add_field(name=f"{p}list (table)",
-                     value="List all the characters in a table",
-                     inline=False)
-    output.add_field(name=f"{p}char (character)",
-                     value="Display a character's info",
-                     inline=False)
-
-    if ctx.message.author.server_permissions.administrator:
-        output.add_field(name=f"{p}import (preset)",
-                         value="Load a preset",
-                         inline=False)
-        output.add_field(name=f"{p}create (table)",
-                         value="Make a new empty table",
-                         inline=False)
-        output.add_field(name=f"{p}add (table) (character) (args)",
-                         value="Add a character to a table",
-                         inline=False)
-        output.add_field(name=f"{p}del (table | character)",
-                         value="Delete a character or a table",
-                         inline=False)
-        output.add_field(name=f"{p}template (args)",
-                         value="Update the template",
-                         inline=False)
-
-    output.add_field(name=f"{p}invite",
-                     value="Get the bot's invite link",
-                     inline=False)
-    output.add_field(name=f"{p}info",
-                     value="General information about the bot",
-                     inline=False)
-    output.add_field(name=f"{p}help",
-                     value="Display this message",
-                     inline=False)
-
-    await client.send_message(ctx.message.author, '', embed=output)
-
-
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(start_database())
     loop.run_until_complete(start_servers_data())
 
-    extensions = ["commands.input", "commands.output", "commands.roleplay"]
+    extensions = ["commands.input", "commands.output", "commands.roleplay", "commands.help"]
     for e in extensions:
         client.load_extension(e)
 

@@ -74,7 +74,7 @@ async def load_file_preset(server, link):
             is_table_name = True
 
             for nothing in row[1:]:
-                if nothing != " ":
+                if nothing != " " and nothing != "":
                     is_table_name = False
                     break
 
@@ -91,15 +91,16 @@ async def load_file_preset(server, link):
                 if template is None:
                     template = row
                     await update_template(server, row[2:])
+                continue
 
-            if not is_template:
-                if current_table is None or current_table == "":
-                    raise SyntaxError("csv_no_table_name")
+            if current_table is None or current_table == "":
+                raise SyntaxError("csv_no_table_name")
 
-                if row[0] in names:
-                    raise SyntaxError("csv_duplicate_char_name")
-                names.append(row[0])
-                await insert(server, current_table, row)
+            if row[0] in names:
+                raise SyntaxError("csv_duplicate_char_name")
+
+            names.append(row[0])
+            await insert(server, current_table, row)
 
     except DuplicateColumnError:
         await load_backup(server)
