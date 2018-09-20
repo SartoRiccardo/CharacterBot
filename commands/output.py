@@ -11,6 +11,7 @@ parameters = {
     "char": ["character"],
     "list": ["table"]
 }
+special_columns = ('taken_by', 'thumbnail', 'img', 'discord_role', 'table')
 
 
 class Output:
@@ -20,7 +21,6 @@ class Output:
     @commands.command(pass_context=True)
     async def char(self, ctx, *args):
         character = ' '.join(args)
-        special_columns = ('taken_by', 'thumbnail', 'img' 'discord_role', 'table')
         server = ctx.message.server.id
 
         info = await get_character_info(server, character)
