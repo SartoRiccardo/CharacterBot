@@ -49,8 +49,8 @@ class Help:
     async def on_reaction_add(self, reaction, user):
         message = reaction.message
         emoji = reaction.emoji
-        if message.author.id == "491581230962442242" \
-                and user.id != "491581230962442242" \
+        if message.author.id == "475707068196585473" \
+                and user.id != "475707068196585473" \
                 and emoji in reactions:
             await self.client.remove_reaction(message, emoji, user)
 
