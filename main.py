@@ -61,7 +61,7 @@ Developed by Trifo Reborn"""
 
 @client.command(pass_context=True, aliases=["invite"])
 async def share(ctx):
-    await client.send_message(ctx.message.author, "https://bit.ly/CharacterBotInvite")
+    await client.send_message(ctx.message.author, "https://bit.ly/2NXNMJn")
 
 
 if __name__ == "__main__":
