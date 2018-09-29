@@ -26,6 +26,11 @@ class Output:
         info = await get_character_info(server, character)
         attributes = get_dict_keys(info)
 
+        if len(args) == 0:
+            prefix = await get_prefix(server)
+            await self.client.say(f"Usage: `{prefix}char (character)`\n"
+                                  f"Use `{prefix}list` to see who's available")
+
         if "table" not in attributes:
             return
 

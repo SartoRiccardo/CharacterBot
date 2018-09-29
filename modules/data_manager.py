@@ -2,7 +2,7 @@ import json
 import asyncio
 import asyncpg
 from modules.misc_utils import *
-from modules.data_getter import get_columns, get_server_data, get_tables, get_character_info, fetch, get_con
+from modules.data_getter import get_columns, get_tables, get_character_info, fetch, get_con
 
 
 async def start_servers_data():
@@ -196,4 +196,6 @@ async def load_backup(server):
     dprint("Backup loaded")
 
 
-
+async def unregister_server(server):
+    query = f"DELETE FROM servers WHERE server='{server}'"
+    await get_con().execute(query)

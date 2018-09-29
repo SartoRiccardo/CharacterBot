@@ -139,6 +139,7 @@ class Input:
         prefix = await get_prefix(server)
         if to_delete == "":
             await self.client.say(msgs["usage"].format(prefix))
+            return
 
         char_info = await get_character_info(server, to_delete)
 
@@ -164,6 +165,7 @@ class Input:
     @commands.command(pass_context=True, aliases=["import"])
     async def load(self, ctx, preset=None):
         msgs = {
+            "usage": "Usage: `{}import [preset]``[file]`",
             "insufficient_permissions": "You don't have the permissions to do that",
             "nonexistent": "The preset **{}** doesn't exist!",
             "list_presets": "Do `{}import list` to see what's available!",
@@ -195,7 +197,10 @@ class Input:
             for p in available_presets:
                 msg += f"`{p}` "
             msg += f"\nYou can also just write `{prefix}import` and attach a csv file to it"
-            await self.client.say(msg)
+
+            prefix = await get_prefix(ctx.message.server.id)
+
+            await self.client.say(msgs["usage"].format(prefix) + '\n' + msg)
             return
 
         if preset is None and ctx.message.attachments != []:
@@ -218,7 +223,7 @@ class Input:
         await self.client.say(msgs["confirmation"])
         response = await self.client.wait_for_message(author=ctx.message.author, timeout=30)
         try:
-            if response is not None and response.clean_content == "yes":
+            if response is not None and response.clean_content.lower() == "yes":
                 server = ctx.message.server.id
                 await import_db(server, preset)
                 await self.client.say(msgs["success"].format(preset))
@@ -233,6 +238,7 @@ class Input:
     async def template(self, ctx, *args):
         msgs = {
             "insufficient_permissions": "You don't have the permissions to do that!",
+            "confirmation": "You are about to modify the template. Type `yes` to go through with it.",
             "success": "Template was updated!",
             "space_in_arg": "You can't put spaces in the template! "
                             "Try using underscores (_) instead!"
@@ -240,6 +246,12 @@ class Input:
 
         if not ctx.message.author.server_permissions.administrator:
             await self.client.say(msgs["insufficient_permissions"])
+            return
+
+        await self.client.say(msgs["confirmation"])
+        response = await self.client.wait_for_message(author=ctx.message.author, timeout=30)
+
+        if response is None or response.clean_content.lower() != "yes":
             return
 
         try:

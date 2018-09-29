@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from modules.data_manager import modify
+from modules.data_manager import modify, unregister_server
 from modules.data_getter import get_user_character, get_character_info, get_columns, get_tables, fetch, get_prefix
 
 parameters = {
@@ -28,10 +28,23 @@ class RolePlay:
         for t in tables:
             await modify(server, t, f"taken_by='{after}'", f"taken_by='{before}'")
 
+    async def on_server_leave(self, server):
+        id = server.id
+
+        tables = await get_tables(id)
+        for t in tables:
+            await delete_table(server, t)
+
+        backup = await get_tables(id, bk=True)
+        for b in backup:
+            await delete_table(server, b, bk=True)
+
+        await unregister_server(id)
+
     @commands.command(pass_context=True)
     async def take(self, ctx, *args):
         msgs = {
-            "usage": "Usage: `{}take (char)`\nUse `{}list` to see what's available",
+            "usage": "Usage: `{}take (char)`\nUse `{}list` to see who's available",
             "already_assigned": "You are already assigned to **{}**!",
             "invalid_param": "Invalid parameter: {}.",
             "unavailable": "That character is already taken.",

@@ -106,12 +106,3 @@ async def fetch(server, table, to_return, *conditions, bk=False):
     ret = [dict(r) for r in ret]
 
     return ret
-
-
-async def get_server_data():
-    """Return the contents of servers.json"""
-    path = os.path.join(project_path, "files", "servers.json")
-    with open(path, 'r') as jsonFile:
-        ret = json.load(jsonFile)
-
-    return ret

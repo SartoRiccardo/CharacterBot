@@ -2,11 +2,10 @@ import config
 import discord
 import asyncio
 from discord.ext import commands
-from modules.chat_utils import get_embed
 from modules.data_manager import start_servers_data, register_server, change_prefix
 from modules.data_getter import start_database, get_prefix
 
-VERSION = "1.0.1"
+VERSION = "1.0.0"
 client = commands.Bot(command_prefix='$')
 client.remove_command('help')
 
@@ -41,9 +40,14 @@ async def on_message(message):
 
 
 @client.command(pass_context=True)
-async def prefix(ctx, newprefix):
+async def prefix(ctx, newprefix=None):
     if not ctx.message.author.server_permissions.administrator:
         await client.say("You don't have the permissions to do that!")
+        return
+
+    current_prefix = await get_prefix(ctx.message.server.id)
+    if newprefix is None:
+        await client.say(f"Usage: `{current_prefix}prefix (newprefix)")
         return
 
     await change_prefix(ctx.message.server.id, newprefix.replace("'", "''").replace('"', '""'))
@@ -55,7 +59,7 @@ async def info(ctx):
     prefix = await get_prefix(ctx.message.server.id)
     msg = f"""CharacterBot v{VERSION}
 A bot that helps users role play! Check `{prefix}help` for usage.
-Developed by Trifo Reborn"""
+GitHub Repository: https://bit.ly/CharacterBotGit"""
     await client.say(msg)
 
 
