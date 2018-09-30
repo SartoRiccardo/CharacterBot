@@ -65,7 +65,8 @@ class Output:
             "usage": "Usage: `{}list (table)`",
             "invalid_param": "Error: Table `{}` doesn't exist",
             "tables": "Available tables: `{}`",
-            "success": "Use `{}take (name)` to become one of these characters!"
+            "success": "Use `{}take (name)` to become one of these characters!\n"
+                       "Use `{}char (name)` to see a character's info!"
         }
 
         pl = parameters["list"]
@@ -95,7 +96,7 @@ class Output:
                 formatted_c = strikethrough(formatted_c)
             output += f"{formatted_c}\n"
 
-        await self.client.say(msgs["success"].format(prefix),
+        await self.client.say(msgs["success"].format(prefix, prefix),
                               embed=get_embed(first_upper(t), output, discord.Colour(0x546e7a)))
 
     @commands.command(pass_context=True, aliases=["export"])
