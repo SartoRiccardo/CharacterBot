@@ -71,7 +71,7 @@ class Input:
         await pgdelete(server, table, f"name='{char}'")
 
         values = [char, "nobody"]
-        for p in args[parameters["args"]:]:
+        for p in args[parameters["add"]:]:
             values.append(p)
 
         await insert(server, table, values)
